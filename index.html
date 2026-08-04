@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>limo1027 · 个人页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            height: 100vh;
+            background: #0c0c0c;
+        }
+
+        /* 代码雨画布：铺满底层 */
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            display: block;
+        }
+
+        /* 卡片容器：浮在画布上面 */
+        .content {
+            position: relative;
+            z-index: 10;
+            width: 100vw;
+            height: 100vh;
+            padding: 80px 40px 40px 40px;  /* 顶部留白给标题 */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;                    /* 改成 24px 更紧凑 */
+            align-content: flex-start;
+            overflow-y: auto;
+        }
+
+        /* 卡片样式 */
+        .card {
+            width: 300px;
+            height: 160px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.1);
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            cursor: default;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #0f0;
+            box-shadow: 0 6px 20px rgba(0, 255, 0, 0.3);
+        }
+
+        /* ⭐ 超链接样式：继承卡片颜色，去掉下划线 */
+        .card a {
+            color: #0f0;
+            text-decoration: none;
+            font-family: monospace;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.6;
+            transition: color 0.2s;
+        }
+
+        .card a:hover {
+            color: #8f8;
+        }
+
+        /* 页面标题 */
+        .title {
+            position: fixed;
+            top: 20px;
+            left: 40px;
+            z-index: 20;                   /* 在最上层 */
+            color: #0f0;
+            font-family: monospace;
+            font-size: 28px;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .title small {
+            font-size: 16px;
+            opacity: 0.6;
+            margin-left: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 代码雨画布 -->
+    <canvas id="matrix"></canvas>
+
+    <!-- 标题 -->
+    <div class="title">
+        limo1027
+        <small>· 个人项目集</small>
+    </div>
+
+    <!-- 卡片容器 -->
+    <div class="content">
+        <div class="card">
+            <a href="https://github.com/limo1027/mlib">📦 Mlib<br><span style="font-size:12px;opacity:0.7;">0依赖 · 从0制作标准库替代品</span></a>
+        </div>
+        <div class="card">
+            <a href="https://github.com/limo1027/password-calculator">🔐 PasswordCalculator<br><span style="font-size:12px;opacity:0.7;">隐藏功能计算器</span></a>
+        </div>
+        <div class="card">
+            <a href="https://github.com/limo1027/EngLang">⌨️ EngLang<br><span style="font-size:12px;opacity:0.7;">仅用 re 模块 · 纯英文编程语言</span></a>
+        </div>
+        <div class="card">
+            <a href="https://github.com/limo1027/Gunfire-Color">🎮 Gunfire-Color<br><span style="font-size:12px;opacity:0.7;">用 Pygame 制作的小游戏</span></a>
+        </div>
+        <div class="card">
+            <a href="https://github.com/limo1027/Simple-Encrypt">🔒 Simple-Encrypt<br><span style="font-size:12px;opacity:0.7;">几乎绝对安全 · 速度偏慢</span></a>
+        </div>
+    </div>
+
+    <script>
+        // ===== 代码雨脚本 =====
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+=-';
+        const columns = Math.floor(canvas.width / 20);
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = '20px monospace';
+            ctx.fillStyle = '#0f0';
+            ctx.shadowColor = '#0f0';
+            ctx.shadowBlur = 6;
+
+            for (let i = 0; i < columns; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * 20;
+                const y = drops[i] * 20;
+                ctx.fillText(char, x, y);
+
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+    </script>
+</body>
+</html>
